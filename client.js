@@ -34,8 +34,10 @@ document.getElementById('queryButton').onclick = async () => {
     //const method = query.trim().toUpperCase().startsWith('SELECT') ? 'GET' : 'POST';
     const responseElement = document.getElementById('queryResponse');
     if (query.trim().toUpperCase().startsWith('SELECT')){
-        const response = await fetch(url+'/'+query, {
+	const encodedQuery = encodeURIComponent(query);    
+        const response = await fetch(url+'/'+encodedQuery, {
                 method: 'GET',
+		//mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' }
             });
         if (!response.ok) {
