@@ -1,4 +1,5 @@
 const url = "https://webdev2.my-little-tech.com/COMP4537/labs/5/api/v1/sql";
+import {userMessages} from "./lang/messages/en/user.js";
 
 document.getElementById('insertButton').onclick = async () => {
     const data = [
@@ -21,8 +22,8 @@ document.getElementById('insertButton').onclick = async () => {
             const responseData = await response.json();
             responseElement.innerText += JSON.stringify(responseData) + '\n';
         } catch (error) {
-            console.error('Error:', error);
-            responseElement.innerText += 'Error: ' + error.message + '\n';
+            console.error(userMessages.error, error);
+            responseElement.innerText += userMessages.error + error.message + '\n';
         }
     }
 };
@@ -38,7 +39,7 @@ document.getElementById('queryButton').onclick = async () => {
                 headers: { 'Content-Type': 'application/json' }
             });
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error(userMessages.respondNotOk);
         }
         const data = await response.text();
         responseElement.innerText = data;
@@ -49,27 +50,19 @@ document.getElementById('queryButton').onclick = async () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sql: query })
             });
-            if (response.ok) { // Checks if the status code is in the range 200-299
-                const responseData = await response.json(); // Assuming the response is JSON
+            if (response.ok) { 
+                const responseData = await response.json(); 
                 console.log('Response Content:', responseData);
                 responseElement.innerText += JSON.stringify(responseData) + '\n';
             } else {
-                console.error('Error:', response.status, response.statusText);
+                console.error(userMessages.error, response.status, response.statusText);
                 responseElement.innerText += `Error: ${response.status} ${response.statusText}\n`;
             }
         } catch (error) {
-            console.error('Error:', error);
-            responseElement.innerText += 'Error: ' + error.message + '\n';
+            console.error(userMessages.error, error);
+            responseElement.innerText += userMessages.error + error.message + '\n';
         }
     }else{
-	responseElement.innerText += 'Error: Only SELECT or INSERT quary are supported!' + '\n';
+	responseElement.innerText += userMessages.notSopport;
     }
-
-    // fetch(utl, {
-    //     method: method
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     document.getElementById('queryResponse').innerText = JSON.stringify(data);
-    // });
 };
