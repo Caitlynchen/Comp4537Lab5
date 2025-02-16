@@ -1,4 +1,4 @@
-const url = "https://webdev2.my-little-tech.com/COMP4537/labs/5/api/v1/sql/";
+const url = "https://webdev2.my-little-tech.com/COMP4537/labs/5/api/v1/sql";
 
 document.getElementById('insertButton').onclick = async () => {
     const data = [
@@ -30,16 +30,19 @@ document.getElementById('insertButton').onclick = async () => {
 document.getElementById('queryButton').onclick = async () => {
     const query = document.getElementById('Input').value;
     console.log(query);
-    const method = query.trim().toUpperCase().startsWith('SELECT') ? 'GET' : 'POST';
+    //const method = query.trim().toUpperCase().startsWith('SELECT') ? 'GET' : 'POST';
     const responseElement = document.getElementById('queryResponse');
-    if (method == "GET"){
-        const response = await fetch(url+query);
+    if (query.trim().toUpperCase().startsWith('SELECT')){
+        const response = await fetch(url+'/'+query, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         const data = await response.text();
         responseElement.innerText = data;
-    }else{
+    }else if (query.trim().toUpperCase().startsWith('INSERT')){
         try {
             const response = await fetch(url, {
                 method: 'POST',
@@ -58,6 +61,8 @@ document.getElementById('queryButton').onclick = async () => {
             console.error('Error:', error);
             responseElement.innerText += 'Error: ' + error.message + '\n';
         }
+    }else{
+	responseElement.innerText += 'Error: Only SELECT or INSERT quary are supported!' + '\n';
     }
 
     // fetch(utl, {
